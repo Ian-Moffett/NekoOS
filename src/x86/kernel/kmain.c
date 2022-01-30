@@ -6,23 +6,33 @@
 
 #define HALT __asm__ __volatile__("hlt")
 
-
+unsigned int ticks = 0;
 char* vga_main = (char*)0xB8000;
+int cursor_y = 0;
+int cursor_x = 0;
 
 void panic(const char* const PANIC_MESSAGE) {
     clearScreen(&vga_main, 0x4, 0xFE);
-    kputs(PANIC_MESSAGE, &vga_main, 2);
+    kputs(PANIC_MESSAGE, &vga_main, 1);
     __asm__ __volatile__("cli; hlt");
 }
 
 
-static void _test() {
-    panic("AH");
+void irq0_handler() {
+    kputs("TICKS: ", &vga_main, 1);
+    kputs_dec(ticks, &vga_main, 1);
+    ++cursor_y;
+    
+    if (cursor_y > 10) {
+        cursor_y = 0;
+        vga_main = (char*)0xB8000;
+    }
+
+    update_cursor(cursor_x, cursor_y);
 }
 
-__attribute__((interrupt)) void timer_irq_stub(int_frame_t* frame) {
-    outportb(0x20, 0x20);
-}
+
+void _irq0_isr();
 
 
 static void IRQ_clear_mask(unsigned char IRQline) {
@@ -66,15 +76,21 @@ int _start() {
     set_idt_entry(0xD, gp_fault_ex, TRAP_GATE_FLAGS);
     set_idt_entry(0xF, float_ex, TRAP_GATE_FLAGS);
 
-    unsigned int divisor = 1193182 / 50;
-    outportb(0x43, 0x34);             // Command byte.
+    unsigned int divisor = 1193182 / 10;
+    outportb(0x43, 0x36);             // Command byte.
     outportb(0x40, divisor & 0xFF);   // Divisor low byte.
     outportb(0x40, divisor >> 8);     // Divisor high byte.
     outportb(0x21, 0xFF);
 
-    set_idt_entry(0x20, timer_irq_stub, INT_GATE_FLAGS);
+    set_idt_entry(0x20, _irq0_isr, INT_GATE_FLAGS);
     IRQ_clear_mask(0x0);
     __asm__ __volatile__("sti");
+
+    clearScreen(&vga_main, 0x1, 0xE);
+
+    while (1) {
+        HALT;
+    }
 
     return 0;
 }

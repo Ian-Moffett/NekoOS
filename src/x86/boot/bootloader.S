@@ -103,7 +103,7 @@ disk_error:
  dap:
     db 0x10     ; DAP size.
     db 0x0      ; Always zero.
-    dw 0x7      ; Sectors to read.
+    dw 0xC      ; Sectors to read.
     dw 0x1000   ; Dest offset.
     dw 0x0      ; Dest segment.
     dq 0x1      ; Start sector (0 based).
