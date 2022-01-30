@@ -1,6 +1,7 @@
 #include "drivers/VGA.h"
 #include "drivers/PIT.h"
 #include "interrupts/IDT.h"
+#include "interrupts/ISR.h"
 
 char* vga_main = (char*)0xB8000;
 
@@ -22,9 +23,11 @@ static void _test() {
 void init_PIT();
 
 int _start() {
-    init_idt();
+    init_idt();     
+    irq_install();
 
-    set_idt_desc(0x32, _test, TRAP_GATE_FLAGS);
+    init_timer(50);
+    __asm__ __volatile__("sti");
 
     clearScreen(&vga_main, 0x1, 0xE);
     kputs("Hello UwU", &vga_main, 2); 

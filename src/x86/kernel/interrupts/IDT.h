@@ -33,7 +33,7 @@ typedef struct {
     unsigned int eflags;
     unsigned int sp;
     unsigned int ss;
-} __attribute__((packed)) idt_frame_t;
+} __attribute__((packed)) int_frame_t;
 
 void set_idt_desc(unsigned char entry, void* isr, unsigned char flags);
 void init_idt();

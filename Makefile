@@ -3,6 +3,7 @@ default:
 	nasm -felf32 src/x86/kernel/kernel.S -o objres/kasm.o
 	nasm -felf32 src/x86/kernel/interrupts/impl/ISR.S -o obj/israsm.o
 	gcc -c -m32 src/x86/kernel/kmain.c -ffreestanding -fno-pie -fstack-protector -mgeneral-regs-only -o obj/kmain.o
+	gcc -c -m32 src/x86/kernel/interrupts/impl/exceptions.c -ffreestanding -fno-pie -fstack-protector -mgeneral-regs-only -o obj/exceptions.o
 	gcc -c -m32 src/x86/kernel/interrupts/impl/IDT.c -ffreestanding -fno-pie -fstack-protector -mgeneral-regs-only -o obj/idt.o
 	gcc -c -m32 src/x86/kernel/interrupts/impl/ISR.c -ffreestanding -fno-pie -fstack-protector -mgeneral-regs-only -o obj/isr.o
 	gcc -c -m32 src/x86/kernel/util/impl/strings.c -ffreestanding -fno-pie -fstack-protector -o obj/strings.o

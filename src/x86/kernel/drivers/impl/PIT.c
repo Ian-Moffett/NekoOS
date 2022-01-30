@@ -1,9 +1,16 @@
 #include "../PIT.h"
 
+void panic(const char* const PANIC_MESSAGE);
 
-void init_timer(unsigned int frequency) {
-    unsigned int divisor = 1193180 / frequency;
-    outportb(PIT_CMD, CMD_BINARY | CMD_MODE3 | CMD_RW_BOTH | CMD_COUNTER0);
-    outportb(PIT_COUNTER0, divisor);
-    outportb(PIT_COUNTER0, divisor >> 8);
+static void _test() {
+    panic("TEST");
 }
+
+
+void init_timer(unsigned int frequency) { 
+    unsigned int divisor = 1193182 / frequency;
+    outportb(0x43, 0x34);             // Command byte.
+    outportb(0x40, divisor & 0xFF);   // Divisor low byte.
+    outportb(0x40, divisor >> 8);     // Divisor high byte.
+    irq_install_isr(0x0, _test);   
+} 

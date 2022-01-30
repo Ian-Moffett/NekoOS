@@ -7,5 +7,6 @@ _kentry:
     jmp post_exec
 
 post_exec:
+    sti
     hlt
     jmp post_exec
