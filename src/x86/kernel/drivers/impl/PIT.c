@@ -2,10 +2,6 @@
 
 void panic(const char* const PANIC_MESSAGE);
 
-static void _test() {
-    panic("TEST");
-}
-
 
 void init_timer(unsigned int frequency) {
     /*
@@ -31,6 +27,12 @@ void init_timer(unsigned int frequency) {
 	flags = inportb(0x71);
 	outportb(0x70, 0x8A);
 	outportb(0x71, (flags & 0xF0) | divisionRate);
-	
-	//sti;
 } 
+
+
+
+void sleep(unsigned int _ticks) {
+    extern unsigned int ticks;
+    unsigned int maxTicks = ticks + _ticks;
+    while (ticks < _ticks);
+}
