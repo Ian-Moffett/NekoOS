@@ -76,7 +76,7 @@ int _start() {
     set_idt_entry(0xD, gp_fault_ex, TRAP_GATE_FLAGS);
     set_idt_entry(0xF, float_ex, TRAP_GATE_FLAGS);
 
-    unsigned int divisor = 1193182 / 10;
+    unsigned int divisor = 1193182 / 5;
     outportb(0x43, 0x36);             // Command byte.
     outportb(0x40, divisor & 0xFF);   // Divisor low byte.
     outportb(0x40, divisor >> 8);     // Divisor high byte.
