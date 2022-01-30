@@ -19,6 +19,10 @@ void panic(const char* const PANIC_MESSAGE) {
 
 
 void irq0_handler() {
+    if (ticks >= 5000) {
+        ticks = 0;
+    }
+
     kputs("TICKS: ", &vga_main, 1);
     kputs_dec(ticks, &vga_main, 1);
     ++cursor_y;
