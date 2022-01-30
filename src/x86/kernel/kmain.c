@@ -16,7 +16,7 @@ void panic(const char* const PANIC_MESSAGE) {
 
 
 static void _test() {
-    panic("FUCK!");
+    panic("FUCK!");     // Mental breakdown.
 }
 
 
