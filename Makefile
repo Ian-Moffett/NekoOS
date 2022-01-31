@@ -1,4 +1,7 @@
 default:
+	mkdir -p obj
+	mkdir -p objres
+	mkdir -p bin
 	nasm -fbin src/x86/boot/bootloader.S -o bin/bootloader.bin
 	nasm -felf32 src/x86/kernel/kernel.S -o objres/kasm.o
 	nasm -felf32 src/x86/kernel/interrupts/impl/ISR.S -o obj/isr.o
