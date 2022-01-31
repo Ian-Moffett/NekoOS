@@ -7,6 +7,7 @@ default:
 	nasm -felf32 src/x86/kernel/interrupts/impl/ISR.S -o obj/isr.o
 	nasm -felf32 src/x86/kernel/memory/impl/paging.S -o obj/pagingasm.o
 	gcc -c -m32 src/x86/kernel/kmain.c -ffreestanding -fno-pie -fstack-protector -mgeneral-regs-only -o obj/kmain.o
+	gcc -c -m32 src/x86/kernel/memory/impl/pmm.c -ffreestanding -fno-pie -fstack-protector -mgeneral-regs-only -o obj/pmm.o
 	gcc -c -m32 src/x86/kernel/memory/impl/heap.c -ffreestanding -fno-pie -fstack-protector -mgeneral-regs-only -o obj/heap.o
 	gcc -c -m32 src/x86/kernel/process/impl/task.c -ffreestanding -fno-pie -fstack-protector -mgeneral-regs-only -o obj/task.o
 	gcc -c -m32 src/x86/kernel/memory/impl/paging.c -ffreestanding -fno-pie -fstack-protector -mgeneral-regs-only -o obj/paging.o

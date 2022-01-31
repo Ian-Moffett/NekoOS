@@ -6,6 +6,7 @@
 #include "memory/paging.h"
 #include "memory/heap.h"
 #include "process/task.h"
+#include "memory/pmm.h"
 
 #define HALT __asm__ __volatile__("hlt")
 
@@ -101,6 +102,7 @@ int _start() {
     sleep(8);
     kputs("GDT => 00007ca7 00000017", &vga_main, 1);
     sleep(6);
+
     heap_init((void*)0x500, 500);
     kputs("HEAP_BEGIN => 0x500", &vga_main, 1);
     sleep(6);
@@ -115,16 +117,22 @@ int _start() {
     kfree(testAlloc);
     kputs("TEST_ALLOC_FREED", &vga_main, 1);
     sleep(6);
+
     kputs("VGA_WIDTH => 80", &vga_main, 1);
     sleep(6);
     kputs("VGA BUFFER => 0xB8000", &vga_main, 1);
     sleep(6);
+    init_pmm(1024);
+    kputs("__PMM_FRAMESPACE_ALLOCATED__", &vga_main, 0);
+    sleep(24);
+    clearScreen(&vga_main, 0x1, 0xE);
+
     init_tasking();
     kputs("__THREAD_MEM_ALLOC__", &vga_main, 1);
     sleep(6);
     kputs("THREAD_ADDR => ", &vga_main, 0);
     kputs_hex((unsigned int)get_curthread_addr(), &vga_main, 1);
-    sleep(120);
+    sleep(100);
     clearScreen(&vga_main, 0x1, 0xE);
 
     kputs("OS is ready master!~ UwU", &vga_main, 1);
