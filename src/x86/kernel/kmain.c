@@ -104,10 +104,13 @@ int _start() {
     clearScreen(&vga_main, 0x1, 0xE); 
     #endif
 
-    kputs("Enabling paging..", &vga_main, 1);
-    sleep(30);
     init_paging();
-    kputs("0000000000000000-0000000000400000 0000000000400000 -rw", &vga_main, 1);
-
+    kputs("KPGE => 0000000000000000-0000000000400000 0000000000400000 -rw", &vga_main, 1);
+    sleep(20);
+    kputs("IDT => 00005000 00000800", &vga_main, 1);
+    sleep(20);
+    cursor_y += 2;
+    update_cursor(cursor_x, cursor_y);
+    kputs("GDT => 00007ca7 00000017", &vga_main, 1);
     return 0;
 }
