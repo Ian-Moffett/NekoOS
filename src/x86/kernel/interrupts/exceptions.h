@@ -2,6 +2,7 @@
 #define EXCEPTIONS_H
 
 #include "IDT.h"
+#include "../drivers/VGA.h"
 
 
 void div_0_ex(int_frame_t*);

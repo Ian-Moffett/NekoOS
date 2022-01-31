@@ -47,10 +47,13 @@ static memblock_t* _first_fit(size_t size) {
 }
 
 
+void panic(const char* const);
+
+
 void* kmalloc(size_t size) {
-    if (allocated + size > limit) {
-        return NULL;        // Too much memory requested.
-    }
+    if (allocated + size > limit) { 
+        return NULL;
+    } 
 
     memblock_t* region = _first_fit(size);
     if (region == NULL) {

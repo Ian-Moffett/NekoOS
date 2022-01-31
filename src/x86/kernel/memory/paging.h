@@ -5,5 +5,6 @@
 
 
 void init_paging();
+void ch_pge_dir(unsigned int* pge_dir);
 
 #endif

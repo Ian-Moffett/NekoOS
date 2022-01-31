@@ -5,7 +5,6 @@
 #include "interrupts/exceptions.h"
 #include "memory/paging.h"
 #include "memory/heap.h"
-#include "process/task.h"
 
 #define HALT __asm__ __volatile__("hlt")
 
@@ -21,7 +20,6 @@ void panic(const char* const PANIC_MESSAGE) {
     kputs(PANIC_MESSAGE, &vga_main, 1);
     __asm__ __volatile__("cli; hlt");
 }
-
 
 #ifdef OUTPUT_TICKS
 void irq0_handler() {
@@ -88,6 +86,7 @@ int _start() {
     set_idt_entry(0xB, seg_np_ex, TRAP_GATE_FLAGS);
     set_idt_entry(0xC, ss_fault_ex, TRAP_GATE_FLAGS);
     set_idt_entry(0xD, gp_fault_ex, TRAP_GATE_FLAGS);
+    set_idt_entry(0xE, page_fault_ex, TRAP_GATE_FLAGS);
     set_idt_entry(0xF, float_ex, TRAP_GATE_FLAGS);
 
     timer_set_freq(5);
@@ -129,17 +128,9 @@ int _start() {
     kputs("0000000000000000-0000000000400000 0000000000400000 -rw", &vga_main, 1);
     sleep(6);
     kputs("0000000000400000-0000000000800000 0000000000400000 urw", &vga_main, 1);
-    sleep(24);
-    clearScreen(&vga_main, 0x1, 0xE);
 
-    init_tasking();
-    kputs("__THREAD_MEM_ALLOC__", &vga_main, 1);
-    sleep(6);
-    kputs("THREAD_ADDR => ", &vga_main, 0);
-    kputs_hex((unsigned int)get_curthread_addr(), &vga_main, 1);
     sleep(26);
     clearScreen(&vga_main, 0x1, 0xE);
-
     kputs("OS is ready master!~ UwU", &vga_main, 1);
 
     return 0;

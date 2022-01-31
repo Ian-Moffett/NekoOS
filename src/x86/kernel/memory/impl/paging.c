@@ -20,3 +20,8 @@ void init_paging() {
 
     _init_paging((void*)&kernel_pge_dir);
 }
+
+
+void ch_pge_dir(unsigned int* pge_dir) {
+    _init_paging((void*)&pge_dir);
+}
