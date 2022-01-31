@@ -5,9 +5,7 @@
 #include "interrupts/exceptions.h"
 
 #define HALT __asm__ __volatile__("hlt")
-#define OUTPUT_TICKS
 
-unsigned int ticks = 0;
 char* vga_main = (char*)0xB8000;
 int cursor_y = 0;
 int cursor_x = 0;
@@ -21,6 +19,7 @@ void panic(const char* const PANIC_MESSAGE) {
 
 #ifdef OUTPUT_TICKS
 void irq0_handler() {
+    extern unsigned int ticks;
     if (ticks >= 5000) {
         ticks = 0;
     }
@@ -93,9 +92,14 @@ int _start() {
 
     clearScreen(&vga_main, 0x1, 0xE);
 
-    while (1) {
-        HALT;
+    for (int i = 3; i > -1; --i) {
+        kputs("Hello Master!~ This text goes away in: ", &vga_main, 0); 
+        kputs_dec(i, &vga_main, 0);
+        sleep(30);
+        clearScreen(&vga_main, 0x1, 0xE);
     }
+
+    clearScreen(&vga_main, 0x1, 0xE); 
 
     return 0;
 }
