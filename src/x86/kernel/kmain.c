@@ -105,9 +105,9 @@ int _start() {
     sleep(6);
 
     heap_init((void*)0x10000, 4000);
-    kputs("HEAP_BEGIN => 0x500", &vga_main, 1);
+    kputs("HEAP_BEGIN => 0x10000", &vga_main, 1);
     sleep(6);
-    kputs("HEAP_LIMIT => 500", &vga_main, 1);
+    kputs("HEAP_LIMIT => 4000", &vga_main, 1);
     sleep(6);
 
     void* testAlloc = kmalloc(20);
@@ -124,10 +124,8 @@ int _start() {
     kputs("VGA BUFFER => 0xB8000", &vga_main, 1);
     sleep(6);
     init_paging();
-    kputs("__PAGING_INITIALIZED__", &vga_main, 0);
-    sleep(24);
-    clearScreen(&vga_main, 0x1, 0xE);
-
+    kputs("__PAGING_INITIALIZED__", &vga_main, 1);
+    sleep(6);
     kputs("0000000000000000-0000000000400000 0000000000400000 -rw", &vga_main, 1);
     sleep(6);
     kputs("0000000000400000-0000000000800000 0000000000400000 urw", &vga_main, 1);
@@ -139,7 +137,7 @@ int _start() {
     sleep(6);
     kputs("THREAD_ADDR => ", &vga_main, 0);
     kputs_hex((unsigned int)get_curthread_addr(), &vga_main, 1);
-    sleep(100);
+    sleep(26);
     clearScreen(&vga_main, 0x1, 0xE);
 
     kputs("OS is ready master!~ UwU", &vga_main, 1);
