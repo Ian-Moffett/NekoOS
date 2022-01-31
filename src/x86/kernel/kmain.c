@@ -95,12 +95,33 @@ int _start() {
     __asm__ __volatile__("sti");
 
     clearScreen(&vga_main, 0x1, 0xE); 
+
     
+    cursor_y += 5;
+    update_cursor(cursor_x, cursor_y);
+
     sleep(8);
     kputs("IDT => 00005000 00000800", &vga_main, 1);
     sleep(8);
-    cursor_y += 2;
-    update_cursor(cursor_x, cursor_y);
     kputs("GDT => 00007ca7 00000017", &vga_main, 1);
+    sleep(6);
+    heap_init((void*)0x500, 500);
+    kputs("HEAP_BEGIN => 0x500", &vga_main, 1);
+    sleep(6);
+    kputs("HEAP_LIMIT => 500", &vga_main, 1);
+    sleep(6);
+
+    void* testAlloc = kmalloc(20);
+    kputs("TEST_ALLOC => ", &vga_main, 0);
+    kputs_hex((unsigned int)testAlloc, &vga_main, 1);
+    sleep(24);
+    clearScreen(&vga_main, 0x1, 0xE);
+    kfree(testAlloc);
+    kputs("TEST_ALLOC_FREED", &vga_main, 1);
+    sleep(6);
+    kputs("VGA_WIDTH => 80", &vga_main, 1);
+    sleep(6);
+    kputs("VGA BUFFER => 0xB8000", &vga_main, 1);
+
     return 0;
 }
