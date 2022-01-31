@@ -6,7 +6,7 @@ volatile static thread_t* cur_thread;
 volatile static thread_t* ready_queue;
 
 static unsigned int _pid = 1;
-extern unsigned int page_dir;
+unsigned int page_dir = 0;
 
 void init_tasking() {
     __asm__ __volatile__("cli");

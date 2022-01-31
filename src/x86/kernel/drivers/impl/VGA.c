@@ -88,3 +88,58 @@ void update_cursor(int x, int y) {
 	outportb(0x3D4, 0x0E);
 	outportb(0x3D5, (unsigned char)((pos >> 8) & 0xFF));
 }
+
+
+static unsigned long _iterateDec(unsigned short digit) {
+    unsigned long i = 1;
+    while (digit--) {
+        i *= 10;
+    }
+
+    return i;
+}
+
+
+void kputs_hex(int hex_num, char** vga, unsigned short nlDepth) {
+    unsigned char hex_string[80];
+    unsigned char *ascii_numbers = "0123456789ABCDEF";
+    unsigned char nibble;
+    unsigned char i = 0, j, temp;
+    unsigned char pad = 0;
+    
+    // If passed in 0, print a 0
+    if (hex_num == 0) {
+        strncpy(hex_string, "0\0", 2);
+        i = 1;
+    }
+
+    if (hex_num < 0x10) pad = 1;    // If one digit, will pad out to 2 later
+
+    while (hex_num > 0) {
+        // Convert hex values to ascii string
+        nibble = (unsigned char)hex_num & 0x0F;  // Get lowest 4 bits
+        nibble = ascii_numbers[nibble];    // Hex to ascii 
+        hex_string[i] = nibble;             // Move ascii char into string
+        hex_num >>= 4;                     // Shift right by 4 for next nibble
+        i++;
+    }
+        
+    if (pad) hex_string[i++] = '0';  // Pad out string with extra 0    
+
+    // Add initial "0x" to front of hex string
+    hex_string[i++] = 'x';
+    hex_string[i++] = '0';
+    hex_string[i] = '\0';   // Null terminate string
+
+    // Number is stored backwards in hex_string, reverse the string by swapping ends
+    //   until they meet in the middle
+    i--;    // Skip null byte
+    for (j = 0; j < i; j++, i--) {
+        temp = hex_string[j];
+        hex_string[j] = hex_string[i];
+        hex_string[i] = temp;
+    }
+
+    // Print hex string
+    kputs(hex_string, vga, nlDepth);
+}

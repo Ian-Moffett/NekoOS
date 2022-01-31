@@ -4,6 +4,8 @@
 #include "interrupts/IDT.h"
 #include "interrupts/exceptions.h"
 #include "memory/paging.h"
+#include "memory/heap.h"
+#include "process/task.h"
 
 #define HALT __asm__ __volatile__("hlt")
 
@@ -13,6 +15,7 @@ int cursor_x = 0;
 
 void panic(const char* const PANIC_MESSAGE) {
     clearScreen(&vga_main, 0x4, 0xFE);
+    kputs("***KERNEL PANIC***", &vga_main, 1);
     kputs(PANIC_MESSAGE, &vga_main, 1);
     __asm__ __volatile__("cli; hlt");
 }
@@ -91,24 +94,11 @@ int _start() {
     IRQ_clear_mask(0x0);
     __asm__ __volatile__("sti");
 
-    clearScreen(&vga_main, 0x1, 0xE);
-    
-    #ifndef OUTPUT_TICKS
-    for (int i = 3; i > -1; --i) {
-        kputs("Hello Master!~ Setup starts in: ", &vga_main, 0); 
-        kputs_dec(i, &vga_main, 0);
-        sleep(30);
-        clearScreen(&vga_main, 0x1, 0xE);
-    }
-
     clearScreen(&vga_main, 0x1, 0xE); 
-    #endif
-
-    init_paging();
-    kputs("KPGE => 0000000000000000-0000000000400000 0000000000400000 -rw", &vga_main, 1);
-    sleep(5);
+    
+    sleep(8);
     kputs("IDT => 00005000 00000800", &vga_main, 1);
-    sleep(5);
+    sleep(8);
     cursor_y += 2;
     update_cursor(cursor_x, cursor_y);
     kputs("GDT => 00007ca7 00000017", &vga_main, 1);
