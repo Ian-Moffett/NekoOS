@@ -58,6 +58,7 @@ static void IRQ_clear_mask(unsigned char IRQline) {
 }
 
 int _start() {
+    // Remap PIC.
     outportb(0x20, 0x11);
     outportb(0xA0, 0x11);
     outportb(0x21, 0x20);
@@ -91,8 +92,6 @@ int _start() {
     __asm__ __volatile__("sti");
 
     clearScreen(&vga_main, 0x1, 0xE);
-    
-
 
     while (1) {
         HALT;
