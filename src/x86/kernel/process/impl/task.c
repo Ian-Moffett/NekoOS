@@ -20,3 +20,8 @@ void init_tasking() {
     cur_thread->next = 0;
     __asm__ __volatile__("sti");
 }
+
+
+void* get_curthread_addr() {
+    return (void*)cur_thread;
+}

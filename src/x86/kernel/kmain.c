@@ -95,11 +95,7 @@ int _start() {
     __asm__ __volatile__("sti");
 
     clearScreen(&vga_main, 0x1, 0xE); 
-
     
-    cursor_y += 5;
-    update_cursor(cursor_x, cursor_y);
-
     sleep(8);
     kputs("IDT => 00005000 00000800", &vga_main, 1);
     sleep(8);
@@ -122,6 +118,16 @@ int _start() {
     kputs("VGA_WIDTH => 80", &vga_main, 1);
     sleep(6);
     kputs("VGA BUFFER => 0xB8000", &vga_main, 1);
+    sleep(6);
+    init_tasking();
+    kputs("__THREAD_MEM_ALLOC__", &vga_main, 1);
+    sleep(6);
+    kputs("THREAD_ADDR => ", &vga_main, 0);
+    kputs_hex((unsigned int)get_curthread_addr(), &vga_main, 1);
+    sleep(120);
+    clearScreen(&vga_main, 0x1, 0xE);
+
+    kputs("OS is ready master!~ UwU", &vga_main, 1);
 
     return 0;
 }

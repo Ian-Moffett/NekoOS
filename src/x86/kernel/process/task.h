@@ -17,5 +17,6 @@ void init_tasking();
 void task_switch();
 int fork();
 int getpid();
+void* get_curthread_addr();
 
 #endif
