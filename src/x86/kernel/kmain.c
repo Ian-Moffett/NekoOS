@@ -3,6 +3,7 @@
 #include "drivers/IO.h"
 #include "interrupts/IDT.h"
 #include "interrupts/exceptions.h"
+#include "memory/paging.h"
 
 #define HALT __asm__ __volatile__("hlt")
 
@@ -102,6 +103,11 @@ int _start() {
 
     clearScreen(&vga_main, 0x1, 0xE); 
     #endif
+
+    kputs("Enabling paging..", &vga_main, 1);
+    sleep(30);
+    init_paging();
+    kputs("0000000000000000-0000000000400000 0000000000400000 -rw", &vga_main, 1);
 
     return 0;
 }

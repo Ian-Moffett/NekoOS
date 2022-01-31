@@ -2,7 +2,9 @@ default:
 	nasm -fbin src/x86/boot/bootloader.S -o bin/bootloader.bin
 	nasm -felf32 src/x86/kernel/kernel.S -o objres/kasm.o
 	nasm -felf32 src/x86/kernel/interrupts/impl/ISR.S -o obj/isr.o
+	nasm -felf32 src/x86/kernel/memory/impl/paging.S -o obj/pagingasm.o
 	gcc -c -m32 src/x86/kernel/kmain.c -ffreestanding -fno-pie -fstack-protector -mgeneral-regs-only -o obj/kmain.o
+	gcc -c -m32 src/x86/kernel/memory/impl/paging.c -ffreestanding -fno-pie -fstack-protector -mgeneral-regs-only -o obj/paging.o
 	gcc -c -m32 src/x86/kernel/drivers/impl/PIT.c -ffreestanding -fno-pie -fstack-protector -mgeneral-regs-only -o obj/pit.o
 	gcc -c -m32 src/x86/kernel/interrupts/impl/exceptions.c -ffreestanding -fno-pie -fstack-protector -mgeneral-regs-only -o obj/exceptions.o
 	gcc -c -m32 src/x86/kernel/interrupts/impl/IDT.c -ffreestanding -fno-pie -fstack-protector -mgeneral-regs-only -o obj/idt.o
@@ -22,7 +24,7 @@ burnusb:
 	sudo dd if=NekoOS.img of=/dev/sdb
 
 runusb:
-	sudo qemu-system-x86_64 -hda /dev/sdb -monitor stdio -d int -no-reboot -D logfile.txt -M smm=off -soundhw pcspk
+	sudo qemu-system-x86_64 -hda /dev/sdb -monitor stdio -d int -no-reboot -D logfile.txt -M smm=off # -soundhw pcspk
 
 run:
 	sudo qemu-system-x86_64 -fda NekoOS.img -monitor stdio
