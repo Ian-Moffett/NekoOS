@@ -106,9 +106,9 @@ int _start() {
 
     init_paging();
     kputs("KPGE => 0000000000000000-0000000000400000 0000000000400000 -rw", &vga_main, 1);
-    sleep(20);
+    sleep(5);
     kputs("IDT => 00005000 00000800", &vga_main, 1);
-    sleep(20);
+    sleep(5);
     cursor_y += 2;
     update_cursor(cursor_x, cursor_y);
     kputs("GDT => 00007ca7 00000017", &vga_main, 1);
