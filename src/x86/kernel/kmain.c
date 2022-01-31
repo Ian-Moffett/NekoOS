@@ -91,7 +91,8 @@ int _start() {
     __asm__ __volatile__("sti");
 
     clearScreen(&vga_main, 0x1, 0xE);
-
+    
+    #ifndef OUTPUT_TICKS
     for (int i = 3; i > -1; --i) {
         kputs("Hello Master!~ This text goes away in: ", &vga_main, 0); 
         kputs_dec(i, &vga_main, 0);
@@ -100,6 +101,7 @@ int _start() {
     }
 
     clearScreen(&vga_main, 0x1, 0xE); 
+    #endif
 
     return 0;
 }
