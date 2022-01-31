@@ -95,7 +95,7 @@ int _start() {
     
     #ifndef OUTPUT_TICKS
     for (int i = 3; i > -1; --i) {
-        kputs("Hello Master!~ This text goes away in: ", &vga_main, 0); 
+        kputs("Hello Master!~ Setup starts in: ", &vga_main, 0); 
         kputs_dec(i, &vga_main, 0);
         sleep(30);
         clearScreen(&vga_main, 0x1, 0xE);

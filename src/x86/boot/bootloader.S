@@ -12,10 +12,6 @@ mov sp, bp
 _start:
     mov [DRIVE_NUM], dl
 
-    mov ah, 0x0
-    mov al, 0x2
-    int 0x10
-
     mov si, welcome_msg
     call puts
 
