@@ -1,10 +1,11 @@
 #include "drivers/VGA.h"
 #include "drivers/PIT.h"
+#include "drivers/IO.h"
 #include "interrupts/IDT.h"
 #include "interrupts/exceptions.h"
-#include "drivers/IO.h"
 
 #define HALT __asm__ __volatile__("hlt")
+#define OUTPUT_TICKS
 
 unsigned int ticks = 0;
 char* vga_main = (char*)0xB8000;
@@ -18,6 +19,7 @@ void panic(const char* const PANIC_MESSAGE) {
 }
 
 
+#ifdef OUTPUT_TICKS
 void irq0_handler() {
     if (ticks >= 5000) {
         ticks = 0;
@@ -34,7 +36,9 @@ void irq0_handler() {
 
     update_cursor(cursor_x, cursor_y);
 }
-
+#else 
+void irq0_handler() {}
+#endif
 
 void _irq0_isr();
 
@@ -80,17 +84,15 @@ int _start() {
     set_idt_entry(0xD, gp_fault_ex, TRAP_GATE_FLAGS);
     set_idt_entry(0xF, float_ex, TRAP_GATE_FLAGS);
 
-    unsigned int divisor = 1193182 / 5;
-    outportb(0x43, 0x36);             // Command byte.
-    outportb(0x40, divisor & 0xFF);   // Divisor low byte.
-    outportb(0x40, divisor >> 8);     // Divisor high byte.
-    outportb(0x21, 0xFF);
+    timer_set_freq(5);
 
     set_idt_entry(0x20, _irq0_isr, INT_GATE_FLAGS);
     IRQ_clear_mask(0x0);
     __asm__ __volatile__("sti");
 
     clearScreen(&vga_main, 0x1, 0xE);
+    
+
 
     while (1) {
         HALT;

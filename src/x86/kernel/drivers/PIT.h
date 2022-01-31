@@ -3,7 +3,7 @@
 
 #include "IO.h"
 
-void init_timer(unsigned int frequency);
+void timer_set_freq(unsigned int freq);
 void sleep(unsigned int _ticks);
 
 #endif

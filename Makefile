@@ -22,7 +22,7 @@ burnusb:
 	sudo dd if=NekoOS.img of=/dev/sdb
 
 runusb:
-	sudo qemu-system-x86_64 -hda /dev/sdb -monitor stdio -d int -no-reboot -D logfile.txt -M smm=off 
+	sudo qemu-system-x86_64 -hda /dev/sdb -monitor stdio -d int -no-reboot -D logfile.txt -M smm=off -soundhw pcspk
 
 run:
 	sudo qemu-system-x86_64 -fda NekoOS.img -monitor stdio
