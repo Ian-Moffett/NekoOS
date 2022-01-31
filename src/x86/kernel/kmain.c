@@ -6,7 +6,6 @@
 #include "memory/paging.h"
 #include "memory/heap.h"
 #include "process/task.h"
-#include "memory/pmm.h"
 
 #define HALT __asm__ __volatile__("hlt")
 
@@ -15,8 +14,10 @@ int cursor_y = 0;
 int cursor_x = 0;
 
 void panic(const char* const PANIC_MESSAGE) {
+    outportb(0x3D4, 0x0A);
+    outportb(0x3D5, 0x20);
     clearScreen(&vga_main, 0x4, 0xFE);
-    kputs("***KERNEL PANIC***", &vga_main, 1);
+    kputs("***KERNEL PANIC***", &vga_main, 2);
     kputs(PANIC_MESSAGE, &vga_main, 1);
     __asm__ __volatile__("cli; hlt");
 }
@@ -103,7 +104,7 @@ int _start() {
     kputs("GDT => 00007ca7 00000017", &vga_main, 1);
     sleep(6);
 
-    heap_init((void*)0x500, 500);
+    heap_init((void*)0x10000, 4000);
     kputs("HEAP_BEGIN => 0x500", &vga_main, 1);
     sleep(6);
     kputs("HEAP_LIMIT => 500", &vga_main, 1);
@@ -122,8 +123,14 @@ int _start() {
     sleep(6);
     kputs("VGA BUFFER => 0xB8000", &vga_main, 1);
     sleep(6);
-    init_pmm(1024);
-    kputs("__PMM_FRAMESPACE_ALLOCATED__", &vga_main, 0);
+    init_paging();
+    kputs("__PAGING_INITIALIZED__", &vga_main, 0);
+    sleep(24);
+    clearScreen(&vga_main, 0x1, 0xE);
+
+    kputs("0000000000000000-0000000000400000 0000000000400000 -rw", &vga_main, 1);
+    sleep(6);
+    kputs("0000000000400000-0000000000800000 0000000000400000 urw", &vga_main, 1);
     sleep(24);
     clearScreen(&vga_main, 0x1, 0xE);
 
