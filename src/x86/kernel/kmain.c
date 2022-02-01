@@ -3,7 +3,6 @@
 #include "drivers/IO.h"
 #include "interrupts/IDT.h"
 #include "interrupts/exceptions.h"
-#include "memory/paging.h"
 #include "memory/heap.h"
 
 #define HALT __asm__ __volatile__("hlt")
